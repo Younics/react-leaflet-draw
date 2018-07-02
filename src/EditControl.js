@@ -1,23 +1,23 @@
-import { PropTypes } from 'prop-types';
-import Draw from 'leaflet-draw'; // eslint-disable-line
-import isEqual from 'lodash.isequal';
+import { PropTypes } from "prop-types";
+import Draw from "leaflet-draw"; // eslint-disable-line
+import isEqual from "lodash.isequal";
 
-import { LayersControl } from 'react-leaflet';
-import { Map } from 'leaflet';
+import { LayersControl } from "react-leaflet";
+import { Map } from "leaflet";
 
 const eventHandlers = {
-  onEdited: 'draw:edited',
-  onDrawStart: 'draw:drawstart',
-  onDrawStop: 'draw:drawstop',
-  onDrawVertex: 'draw:drawvertex',
-  onEditStart: 'draw:editstart',
-  onEditMove: 'draw:editmove',
-  onEditResize: 'draw:editresize',
-  onEditVertex: 'draw:editvertex',
-  onEditStop: 'draw:editstop',
-  onDeleted: 'draw:deleted',
-  onDeleteStart: 'draw:deletestart',
-  onDeleteStop: 'draw:deletestop',
+  onEdited: "draw:edited",
+  onDrawStart: "draw:drawstart",
+  onDrawStop: "draw:drawstop",
+  onDrawVertex: "draw:drawvertex",
+  onEditStart: "draw:editstart",
+  onEditMove: "draw:editmove",
+  onEditResize: "draw:editresize",
+  onEditVertex: "draw:editvertex",
+  onEditStop: "draw:editstop",
+  // onDeleted: "draw:deleted",
+  onDeleteStart: "draw:deletestart",
+  onDeleteStop: "draw:deletestop"
 };
 
 export default class EditControl extends LayersControl {
@@ -28,24 +28,25 @@ export default class EditControl extends LayersControl {
     }, {}),
     onCreated: PropTypes.func,
     onMounted: PropTypes.func,
+    onDeleted: PropTypes.func,
     draw: PropTypes.shape({
       polyline: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
       polygon: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
       rectangle: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
       circle: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
-      marker: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
+      marker: PropTypes.oneOfType([PropTypes.object, PropTypes.bool])
     }),
     edit: PropTypes.shape({
       edit: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
       remove: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
       poly: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
-      allowIntersection: PropTypes.bool,
+      allowIntersection: PropTypes.bool
     }),
     position: PropTypes.oneOf([
-      'topright',
-      'topleft',
-      'bottomright',
-      'bottomleft'
+      "topright",
+      "topleft",
+      "bottomright",
+      "bottomleft"
     ])
   };
 
@@ -57,12 +58,18 @@ export default class EditControl extends LayersControl {
     })
   };
 
-  onDrawCreate = (e) => {
+  onDrawCreate = e => {
     const { onCreated } = this.props;
     const { layerContainer } = this.context;
 
     layerContainer.addLayer(e.layer);
-    onCreated && onCreated(e);
+    if (typeof onCreated === "function") onCreated(e);
+  };
+
+  onDeleted = e => {
+    const { onDeleted } = this.props;
+
+    if (typeof onDeleted === "function") onDeleted(e);
   };
 
   componentWillMount() {
@@ -70,7 +77,8 @@ export default class EditControl extends LayersControl {
 
     this.updateDrawControls();
 
-    map.on('draw:created', this.onDrawCreate);
+    map.on("draw:created", this.onDrawCreate);
+    map.on("draw:deleted", this.onDeleted);
 
     for (const key in eventHandlers) {
       if (this.props[key]) {
@@ -81,15 +89,16 @@ export default class EditControl extends LayersControl {
 
   componentDidMount() {
     const { onMounted } = this.props;
-    super.componentDidMount();
-    onMounted && onMounted(this.leafletElement);
+
+    if (typeof onMounted === "function") onMounted(this.leafletElement);
   }
 
   componentWillUnmount() {
     const { map } = this.context;
     this.leafletElement.remove(map);
 
-    map.off('draw:created', this.onDrawCreate);
+    map.off("draw:created", this.onDrawCreate);
+    map.off("draw:deleted", this.onDeleted);
 
     for (const key in eventHandlers) {
       if (this.props[key]) {
@@ -102,7 +111,10 @@ export default class EditControl extends LayersControl {
     // super updates positions if thats all that changed so call this first
     super.componentDidUpdate(prevProps);
 
-    if (isEqual(this.props.draw, prevProps.draw) || this.props.position !== prevProps.position) {
+    if (
+      isEqual(this.props.draw, prevProps.draw) ||
+      this.props.position !== prevProps.position
+    ) {
       return false;
     }
 
