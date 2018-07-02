@@ -13,6 +13,7 @@
     "prepublish": "npm run build",
     "version": "npm run build",
     "postversion": "git push && git push --tags",
+    "postinstall": "npm install && npm run build && rm -rf node_modules/",
     "example": "webpack-dev-server --config ./example/webpack.config.js",
     "lint": "eslint ./src"
   },
