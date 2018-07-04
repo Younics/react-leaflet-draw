@@ -73,7 +73,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -109,18 +109,17 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 	var eventHandlers = {
-	  onEdited: "draw:edited",
-	  onDrawStart: "draw:drawstart",
-	  onDrawStop: "draw:drawstop",
-	  onDrawVertex: "draw:drawvertex",
-	  onEditStart: "draw:editstart",
-	  onEditMove: "draw:editmove",
-	  onEditResize: "draw:editresize",
-	  onEditVertex: "draw:editvertex",
-	  onEditStop: "draw:editstop",
-	  // onDeleted: "draw:deleted",
-	  onDeleteStart: "draw:deletestart",
-	  onDeleteStop: "draw:deletestop"
+	  onEdited: 'draw:edited',
+	  onDrawStart: 'draw:drawstart',
+	  onDrawStop: 'draw:drawstop',
+	  onDrawVertex: 'draw:drawvertex',
+	  onEditStart: 'draw:editstart',
+	  onEditMove: 'draw:editmove',
+	  onEditResize: 'draw:editresize',
+	  onEditVertex: 'draw:editvertex',
+	  onEditStop: 'draw:editstop',
+	  onDeleteStart: 'draw:deletestart',
+	  onDeleteStop: 'draw:deletestop'
 	};
 
 	var EditControl = function (_LayersControl) {
@@ -143,12 +142,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 	      layerContainer.addLayer(e.layer);
-	      if (typeof onCreated === "function") onCreated(e);
+	      if (typeof onCreated === 'function') onCreated(e);
 	    }, _this.onDeleted = function (e) {
 	      var onDeleted = _this.props.onDeleted;
 
 
-	      if (typeof onDeleted === "function") onDeleted(e);
+	      if (typeof onDeleted === 'function') onDeleted(e);
 	    }, _this.updateDrawControls = function () {
 	      var layerContainer = _this.context.layerContainer;
 	      var _this$props = _this.props,
@@ -175,15 +174,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 
 	  _createClass(EditControl, [{
-	    key: "componentWillMount",
+	    key: 'componentWillMount',
 	    value: function componentWillMount() {
 	      var map = this.context.map;
 
 
 	      this.updateDrawControls();
 
-	      map.on("draw:created", this.onDrawCreate);
-	      map.on("draw:deleted", this.onDeleted);
+	      map.on('draw:created', this.onDrawCreate);
+	      map.on('draw:deleted', this.onDeleted);
 
 	      for (var key in eventHandlers) {
 	        if (this.props[key]) {
@@ -192,22 +191,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	    }
 	  }, {
-	    key: "componentDidMount",
+	    key: 'componentDidMount',
 	    value: function componentDidMount() {
 	      var onMounted = this.props.onMounted;
 
 
-	      if (typeof onMounted === "function") onMounted(this.leafletElement);
+	      _get(EditControl.prototype.__proto__ || Object.getPrototypeOf(EditControl.prototype), 'componentDidMount', this).call(this);
+	      if (typeof onMounted === 'function') onMounted(this.leafletElement);
 	    }
 	  }, {
-	    key: "componentWillUnmount",
+	    key: 'componentWillUnmount',
 	    value: function componentWillUnmount() {
 	      var map = this.context.map;
 
 	      this.leafletElement.remove(map);
 
-	      map.off("draw:created", this.onDrawCreate);
-	      map.off("draw:deleted", this.onDeleted);
+	      map.off('draw:created', this.onDrawCreate);
+	      map.off('draw:deleted', this.onDeleted);
 
 	      for (var key in eventHandlers) {
 	        if (this.props[key]) {
@@ -216,10 +216,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	    }
 	  }, {
-	    key: "componentDidUpdate",
+	    key: 'componentDidUpdate',
 	    value: function componentDidUpdate(prevProps) {
 	      // super updates positions if thats all that changed so call this first
-	      _get(EditControl.prototype.__proto__ || Object.getPrototypeOf(EditControl.prototype), "componentDidUpdate", this).call(this, prevProps);
+	      _get(EditControl.prototype.__proto__ || Object.getPrototypeOf(EditControl.prototype), 'componentDidUpdate', this).call(this, prevProps);
 
 	      if ((0, _lodash2.default)(this.props.draw, prevProps.draw) || this.props.position !== prevProps.position) {
 	        return false;
@@ -259,7 +259,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    poly: _propTypes.PropTypes.oneOfType([_propTypes.PropTypes.object, _propTypes.PropTypes.bool]),
 	    allowIntersection: _propTypes.PropTypes.bool
 	  }),
-	  position: _propTypes.PropTypes.oneOf(["topright", "topleft", "bottomright", "bottomleft"])
+	  position: _propTypes.PropTypes.oneOf(['topright', 'topleft', 'bottomright', 'bottomleft'])
 	});
 	EditControl.contextTypes = {
 	  map: _propTypes.PropTypes.instanceOf(_leaflet.Map),
