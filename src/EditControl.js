@@ -1,22 +1,22 @@
-import { PropTypes } from 'prop-types';
-import Draw from 'leaflet-draw'; // eslint-disable-line
-import isEqual from 'lodash.isequal';
+import { PropTypes } from "prop-types";
+import Draw from "leaflet-draw"; // eslint-disable-line
+import isEqual from "lodash.isequal";
 
-import { LayersControl } from 'react-leaflet';
-import { Map } from 'leaflet';
+import { LayersControl } from "react-leaflet";
+import { Map } from "leaflet";
 
 const eventHandlers = {
-  onEdited: 'draw:edited',
-  onDrawStart: 'draw:drawstart',
-  onDrawStop: 'draw:drawstop',
-  onDrawVertex: 'draw:drawvertex',
-  onEditStart: 'draw:editstart',
-  onEditMove: 'draw:editmove',
-  onEditResize: 'draw:editresize',
-  onEditVertex: 'draw:editvertex',
-  onEditStop: 'draw:editstop',
-  onDeleteStart: 'draw:deletestart',
-  onDeleteStop: 'draw:deletestop'
+  onEdited: "draw:edited",
+  onDrawStart: "draw:drawstart",
+  onDrawStop: "draw:drawstop",
+  onDrawVertex: "draw:drawvertex",
+  onEditStart: "draw:editstart",
+  onEditMove: "draw:editmove",
+  onEditResize: "draw:editresize",
+  onEditVertex: "draw:editvertex",
+  onEditStop: "draw:editstop",
+  onDeleteStart: "draw:deletestart",
+  onDeleteStop: "draw:deletestop"
 };
 
 export default class EditControl extends LayersControl {
@@ -42,10 +42,10 @@ export default class EditControl extends LayersControl {
       allowIntersection: PropTypes.bool
     }),
     position: PropTypes.oneOf([
-      'topright',
-      'topleft',
-      'bottomright',
-      'bottomleft'
+      "topright",
+      "topleft",
+      "bottomright",
+      "bottomleft"
     ])
   };
 
@@ -62,13 +62,37 @@ export default class EditControl extends LayersControl {
     const { layerContainer } = this.context;
 
     layerContainer.addLayer(e.layer);
-    if (typeof onCreated === 'function') onCreated(e);
+    if (typeof onCreated === "function") onCreated(e);
   };
 
   onDeleted = e => {
     const { onDeleted } = this.props;
 
-    if (typeof onDeleted === 'function') onDeleted(e);
+    if (typeof onDeleted === "function") onDeleted(e);
+  };
+
+  onDeleteStart = e => {
+    const { onDeleteStart } = this.props;
+
+    if (typeof onDeleteStart === "function") onDeleteStart(e);
+  };
+
+  onDeleteStop = e => {
+    const { onDeleteStop } = this.props;
+
+    if (typeof onDeleteStop === "function") onDeleteStop(e);
+  };
+
+  onDrawStart = e => {
+    const { onDrawStart } = this.props;
+
+    if (typeof onDrawStart === "function") onDrawStart(e);
+  };
+
+  onDrawStop = e => {
+    const { onDrawStop } = this.props;
+
+    if (typeof onDrawStop === "function") onDrawStop(e);
   };
 
   componentWillMount() {
@@ -76,8 +100,12 @@ export default class EditControl extends LayersControl {
 
     this.updateDrawControls();
 
-    map.on('draw:created', this.onDrawCreate);
-    map.on('draw:deleted', this.onDeleted);
+    map.on("draw:created", this.onDrawCreate);
+    map.on("draw:deleted", this.onDeleted);
+    map.on("draw:deletestart", this.onDeleteStart);
+    map.on("draw:deletestop", this.onDeleteStop);
+    map.on("draw:drawstart", this.onDrawStart);
+    map.on("draw:drawstop", this.onDrawStop);
 
     for (const key in eventHandlers) {
       if (this.props[key]) {
@@ -90,15 +118,19 @@ export default class EditControl extends LayersControl {
     const { onMounted } = this.props;
 
     super.componentDidMount();
-    if (typeof onMounted === 'function') onMounted(this.leafletElement);
+    if (typeof onMounted === "function") onMounted(this.leafletElement);
   }
 
   componentWillUnmount() {
     const { map } = this.context;
     this.leafletElement.remove(map);
 
-    map.off('draw:created', this.onDrawCreate);
-    map.off('draw:deleted', this.onDeleted);
+    map.off("draw:created", this.onDrawCreate);
+    map.off("draw:deleted", this.onDeleted);
+    map.on("draw:deletestart", this.onDeleteStart);
+    map.on("draw:deletestop", this.onDeleteStop);
+    map.on("draw:drawstart", this.onDrawStart);
+    map.on("draw:drawstop", this.onDrawStop);
 
     for (const key in eventHandlers) {
       if (this.props[key]) {
