@@ -12,7 +12,7 @@ npm install react-leaflet-draw
 
 First, include leaflet-draw styles in your project
 ```html
-<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.css"/>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.3/leaflet.draw.css"/>
 ```
 or by including
 ```
@@ -30,7 +30,7 @@ It's important to wrap EditControl component into FeatureGroup component from `r
 The elements you draw will be added to this FeatureGroup layer, when you hit edit button only items in this layer will be edited.
 
 ```jsx
-import { Map, TileLayer, FeatureGroup } from 'react-leaflet';
+import { Map, TileLayer, FeatureGroup, Circle } from 'react-leaflet';
 import { EditControl } from "react-leaflet-draw"
 
 const Component = () => (
